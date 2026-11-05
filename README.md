@@ -17,7 +17,7 @@ Replace this paragraph with your own summary of what your version does.
 
 ## How The System Works
 
-Explain your design in plain language.
+Real-world recommenders like Spotify and YouTube combine two kinds of signals: what other people with similar behavior enjoyed (collaborative filtering), and what the songs themselves sound like (content-based filtering). They turn those signals into a score for every candidate song, then rank the scores to decide what to show. My version is a simplified, purely content-based recommender: it has no data about other users, so it works only from song attributes and one fixed user taste profile. Each song gets a score from 0 to 1 that rewards *closeness* to the user's preferences instead of simply higher or lower values. I prioritize **mood** most heavily, since that is how I naturally describe a vibe. Next come **valence and energy**, with **acousticness** and **genre** as smaller tie-breakers. Mood uses partial credit so that similar moods such as chill and relaxed still count as a match. Everything is a soft score with no hard filters, so a song that misses on one feature can still rank well overall. After scoring every song, the system sorts by score and returns the top results.
 
 Some prompts to answer:
 
