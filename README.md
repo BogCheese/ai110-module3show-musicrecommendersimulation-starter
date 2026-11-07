@@ -114,474 +114,325 @@ You can add more tests in `tests/test_recommender.py`.
 
 ## Sample Recommendation Output
 
-Output of `python -m src.main`, which runs every profile in `PROFILES` (`Loaded songs: 20`). Each block below is the unedited top 5 for one profile. The last four are adversarial profiles built to test the scoring.
+Output of `python -m src.main`, which runs every profile in `PROFILES` (`Loaded songs: 20`). Each block below is the unedited top 5 for one profile, shown as a table with the reasons behind every score. The last four profiles are adversarial cases built to test the scoring. A summary table comparing all profiles comes last.
 
 #### High-Energy Pop
 
 ```
-================================================================
+===========================================================================================
  HIGH-ENERGY POP: TOP 5 RECOMMENDATIONS
  Profile: genre pop, mood happy, energy 0.85, valence 0.8, acousticness 0.15
-================================================================
-
-#1  Sunrise City - Neon Echo
-    pop | happy
-    Score: 8.83 / 9.0
-    Why:
-      - mood match: happy (+3.0)
-      - valence close: 0.84 vs target 0.80 (+1.9)
-      - energy close: 0.82 vs target 0.85 (+1.9)
-      - acousticness close: 0.18 vs target 0.15 (+1.0)
-      - genre match: pop (+1.0)
-----------------------------------------------------------------
-
-#2  Rooftop Lights - Indigo Parade
-    indie pop | happy
-    Score: 7.60 / 9.0
-    Why:
-      - mood match: happy (+3.0)
-      - valence close: 0.81 vs target 0.80 (+2.0)
-      - energy close: 0.76 vs target 0.85 (+1.8)
-      - acousticness close: 0.35 vs target 0.15 (+0.8)
-----------------------------------------------------------------
-
-#3  Cumbia Sunset - La Marea
-    latin | festive
-    Score: 6.97 / 9.0
-    Why:
-      - similar mood: festive ~ happy (+2.4)
-      - valence close: 0.90 vs target 0.80 (+1.8)
-      - energy close: 0.80 vs target 0.85 (+1.9)
-      - acousticness close: 0.28 vs target 0.15 (+0.9)
-----------------------------------------------------------------
-
-#4  Bass Cathedral - Voltage Saints
-    edm | euphoric
-    Score: 6.91 / 9.0
-    Why:
-      - similar mood: euphoric ~ happy (+2.4)
-      - valence close: 0.88 vs target 0.80 (+1.8)
-      - energy close: 0.96 vs target 0.85 (+1.8)
-      - acousticness close: 0.04 vs target 0.15 (+0.9)
-----------------------------------------------------------------
-
-#5  Gym Hero - Max Pulse
-    pop | intense
-    Score: 6.58 / 9.0
-    Why:
-      - similar mood: intense ~ happy (+0.9)
-      - valence close: 0.77 vs target 0.80 (+1.9)
-      - energy close: 0.93 vs target 0.85 (+1.8)
-      - acousticness close: 0.05 vs target 0.15 (+0.9)
-      - genre match: pop (+1.0)
-----------------------------------------------------------------
+===========================================================================================
++-----+-------------------+------------+--------------------------------------------------+
+|  #  | Song              |   Score    | Reasons                                          |
++=====+===================+============+==================================================+
+|  1  | Sunrise City      | 8.83 / 9.0 | - mood match: happy (+3.0)                       |
+|     | Neon Echo         |            | - valence close: 0.84 vs target 0.80 (+1.9)      |
+|     | pop | happy       |            | - energy close: 0.82 vs target 0.85 (+1.9)       |
+|     |                   |            | - acousticness close: 0.18 vs target 0.15 (+1.0) |
+|     |                   |            | - genre match: pop (+1.0)                        |
++-----+-------------------+------------+--------------------------------------------------+
+|  2  | Rooftop Lights    | 7.60 / 9.0 | - mood match: happy (+3.0)                       |
+|     | Indigo Parade     |            | - valence close: 0.81 vs target 0.80 (+2.0)      |
+|     | indie pop | happy |            | - energy close: 0.76 vs target 0.85 (+1.8)       |
+|     |                   |            | - acousticness close: 0.35 vs target 0.15 (+0.8) |
++-----+-------------------+------------+--------------------------------------------------+
+|  3  | Cumbia Sunset     | 6.97 / 9.0 | - similar mood: festive ~ happy (+2.4)           |
+|     | La Marea          |            | - valence close: 0.90 vs target 0.80 (+1.8)      |
+|     | latin | festive   |            | - energy close: 0.80 vs target 0.85 (+1.9)       |
+|     |                   |            | - acousticness close: 0.28 vs target 0.15 (+0.9) |
++-----+-------------------+------------+--------------------------------------------------+
+|  4  | Bass Cathedral    | 6.91 / 9.0 | - similar mood: euphoric ~ happy (+2.4)          |
+|     | Voltage Saints    |            | - valence close: 0.88 vs target 0.80 (+1.8)      |
+|     | edm | euphoric    |            | - energy close: 0.96 vs target 0.85 (+1.8)       |
+|     |                   |            | - acousticness close: 0.04 vs target 0.15 (+0.9) |
++-----+-------------------+------------+--------------------------------------------------+
+|  5  | Gym Hero          | 6.58 / 9.0 | - similar mood: intense ~ happy (+0.9)           |
+|     | Max Pulse         |            | - valence close: 0.77 vs target 0.80 (+1.9)      |
+|     | pop | intense     |            | - energy close: 0.93 vs target 0.85 (+1.8)       |
+|     |                   |            | - acousticness close: 0.05 vs target 0.15 (+0.9) |
+|     |                   |            | - genre match: pop (+1.0)                        |
++-----+-------------------+------------+--------------------------------------------------+
 ```
 
 #### Chill Lofi
 
 ```
-================================================================
+=============================================================================================
  CHILL LOFI: TOP 5 RECOMMENDATIONS
  Profile: genre lofi, mood chill, energy 0.38, valence 0.58, acousticness 0.8
-================================================================
-
-#1  Library Rain - Paper Lanterns
-    lofi | chill
-    Score: 8.84 / 9.0
-    Why:
-      - mood match: chill (+3.0)
-      - valence close: 0.60 vs target 0.58 (+2.0)
-      - energy close: 0.35 vs target 0.38 (+1.9)
-      - acousticness close: 0.86 vs target 0.80 (+0.9)
-      - genre match: lofi (+1.0)
-----------------------------------------------------------------
-
-#2  Midnight Coding - LoRoom
-    lofi | chill
-    Score: 8.79 / 9.0
-    Why:
-      - mood match: chill (+3.0)
-      - valence close: 0.56 vs target 0.58 (+2.0)
-      - energy close: 0.42 vs target 0.38 (+1.9)
-      - acousticness close: 0.71 vs target 0.80 (+0.9)
-      - genre match: lofi (+1.0)
-----------------------------------------------------------------
-
-#3  Focus Flow - LoRoom
-    lofi | focused
-    Score: 8.32 / 9.0
-    Why:
-      - similar mood: focused ~ chill (+2.4)
-      - valence close: 0.59 vs target 0.58 (+2.0)
-      - energy close: 0.40 vs target 0.38 (+2.0)
-      - acousticness close: 0.78 vs target 0.80 (+1.0)
-      - genre match: lofi (+1.0)
-----------------------------------------------------------------
-
-#4  Spacewalk Thoughts - Orbit Bloom
-    ambient | chill
-    Score: 7.54 / 9.0
-    Why:
-      - mood match: chill (+3.0)
-      - valence close: 0.65 vs target 0.58 (+1.9)
-      - energy close: 0.28 vs target 0.38 (+1.8)
-      - acousticness close: 0.92 vs target 0.80 (+0.9)
-----------------------------------------------------------------
-
-#5  Coffee Shop Stories - Slow Stereo
-    jazz | relaxed
-    Score: 7.03 / 9.0
-    Why:
-      - similar mood: relaxed ~ chill (+2.4)
-      - valence close: 0.71 vs target 0.58 (+1.7)
-      - energy close: 0.37 vs target 0.38 (+2.0)
-      - acousticness close: 0.89 vs target 0.80 (+0.9)
-----------------------------------------------------------------
+=============================================================================================
++-----+---------------------+------------+--------------------------------------------------+
+|  #  | Song                |   Score    | Reasons                                          |
++=====+=====================+============+==================================================+
+|  1  | Library Rain        | 8.84 / 9.0 | - mood match: chill (+3.0)                       |
+|     | Paper Lanterns      |            | - valence close: 0.60 vs target 0.58 (+2.0)      |
+|     | lofi | chill        |            | - energy close: 0.35 vs target 0.38 (+1.9)       |
+|     |                     |            | - acousticness close: 0.86 vs target 0.80 (+0.9) |
+|     |                     |            | - genre match: lofi (+1.0)                       |
++-----+---------------------+------------+--------------------------------------------------+
+|  2  | Midnight Coding     | 8.79 / 9.0 | - mood match: chill (+3.0)                       |
+|     | LoRoom              |            | - valence close: 0.56 vs target 0.58 (+2.0)      |
+|     | lofi | chill        |            | - energy close: 0.42 vs target 0.38 (+1.9)       |
+|     |                     |            | - acousticness close: 0.71 vs target 0.80 (+0.9) |
+|     |                     |            | - genre match: lofi (+1.0)                       |
++-----+---------------------+------------+--------------------------------------------------+
+|  3  | Focus Flow          | 8.32 / 9.0 | - similar mood: focused ~ chill (+2.4)           |
+|     | LoRoom              |            | - valence close: 0.59 vs target 0.58 (+2.0)      |
+|     | lofi | focused      |            | - energy close: 0.40 vs target 0.38 (+2.0)       |
+|     |                     |            | - acousticness close: 0.78 vs target 0.80 (+1.0) |
+|     |                     |            | - genre match: lofi (+1.0)                       |
++-----+---------------------+------------+--------------------------------------------------+
+|  4  | Spacewalk Thoughts  | 7.54 / 9.0 | - mood match: chill (+3.0)                       |
+|     | Orbit Bloom         |            | - valence close: 0.65 vs target 0.58 (+1.9)      |
+|     | ambient | chill     |            | - energy close: 0.28 vs target 0.38 (+1.8)       |
+|     |                     |            | - acousticness close: 0.92 vs target 0.80 (+0.9) |
++-----+---------------------+------------+--------------------------------------------------+
+|  5  | Coffee Shop Stories | 7.03 / 9.0 | - similar mood: relaxed ~ chill (+2.4)           |
+|     | Slow Stereo         |            | - valence close: 0.71 vs target 0.58 (+1.7)      |
+|     | jazz | relaxed      |            | - energy close: 0.37 vs target 0.38 (+2.0)       |
+|     |                     |            | - acousticness close: 0.89 vs target 0.80 (+0.9) |
++-----+---------------------+------------+--------------------------------------------------+
 ```
 
 #### Deep Intense Rock
 
 ```
-================================================================
+=============================================================================================
  DEEP INTENSE ROCK: TOP 5 RECOMMENDATIONS
  Profile: genre rock, mood intense, energy 0.92, valence 0.45, acousticness 0.08
-================================================================
-
-#1  Storm Runner - Voltline
-    rock | intense
-    Score: 8.90 / 9.0
-    Why:
-      - mood match: intense (+3.0)
-      - valence close: 0.48 vs target 0.45 (+1.9)
-      - energy close: 0.91 vs target 0.92 (+2.0)
-      - acousticness close: 0.10 vs target 0.08 (+1.0)
-      - genre match: rock (+1.0)
-----------------------------------------------------------------
-
-#2  Gym Hero - Max Pulse
-    pop | intense
-    Score: 7.31 / 9.0
-    Why:
-      - mood match: intense (+3.0)
-      - valence close: 0.77 vs target 0.45 (+1.4)
-      - energy close: 0.93 vs target 0.92 (+2.0)
-      - acousticness close: 0.05 vs target 0.08 (+1.0)
-----------------------------------------------------------------
-
-#3  Ashes in the Static - Iron Verdict
-    metal | angry
-    Score: 6.88 / 9.0
-    Why:
-      - similar mood: angry ~ intense (+2.4)
-      - valence close: 0.25 vs target 0.45 (+1.6)
-      - energy close: 0.97 vs target 0.92 (+1.9)
-      - acousticness close: 0.06 vs target 0.08 (+1.0)
-----------------------------------------------------------------
-
-#4  Concrete Crown - Kid Meridian
-    hip hop | confident
-    Score: 6.74 / 9.0
-    Why:
-      - similar mood: confident ~ intense (+2.4)
-      - valence close: 0.62 vs target 0.45 (+1.7)
-      - energy close: 0.78 vs target 0.92 (+1.7)
-      - acousticness close: 0.12 vs target 0.08 (+1.0)
-----------------------------------------------------------------
-
-#5  Bass Cathedral - Voltage Saints
-    edm | euphoric
-    Score: 4.92 / 9.0
-    Why:
-      - similar mood: euphoric ~ intense (+0.9)
-      - valence close: 0.88 vs target 0.45 (+1.1)
-      - energy close: 0.96 vs target 0.92 (+1.9)
-      - acousticness close: 0.04 vs target 0.08 (+1.0)
-----------------------------------------------------------------
+=============================================================================================
++-----+---------------------+------------+--------------------------------------------------+
+|  #  | Song                |   Score    | Reasons                                          |
++=====+=====================+============+==================================================+
+|  1  | Storm Runner        | 8.90 / 9.0 | - mood match: intense (+3.0)                     |
+|     | Voltline            |            | - valence close: 0.48 vs target 0.45 (+1.9)      |
+|     | rock | intense      |            | - energy close: 0.91 vs target 0.92 (+2.0)       |
+|     |                     |            | - acousticness close: 0.10 vs target 0.08 (+1.0) |
+|     |                     |            | - genre match: rock (+1.0)                       |
++-----+---------------------+------------+--------------------------------------------------+
+|  2  | Gym Hero            | 7.31 / 9.0 | - mood match: intense (+3.0)                     |
+|     | Max Pulse           |            | - valence close: 0.77 vs target 0.45 (+1.4)      |
+|     | pop | intense       |            | - energy close: 0.93 vs target 0.92 (+2.0)       |
+|     |                     |            | - acousticness close: 0.05 vs target 0.08 (+1.0) |
++-----+---------------------+------------+--------------------------------------------------+
+|  3  | Ashes in the Static | 6.88 / 9.0 | - similar mood: angry ~ intense (+2.4)           |
+|     | Iron Verdict        |            | - valence close: 0.25 vs target 0.45 (+1.6)      |
+|     | metal | angry       |            | - energy close: 0.97 vs target 0.92 (+1.9)       |
+|     |                     |            | - acousticness close: 0.06 vs target 0.08 (+1.0) |
++-----+---------------------+------------+--------------------------------------------------+
+|  4  | Concrete Crown      | 6.74 / 9.0 | - similar mood: confident ~ intense (+2.4)       |
+|     | Kid Meridian        |            | - valence close: 0.62 vs target 0.45 (+1.7)      |
+|     | hip hop | confident |            | - energy close: 0.78 vs target 0.92 (+1.7)       |
+|     |                     |            | - acousticness close: 0.12 vs target 0.08 (+1.0) |
++-----+---------------------+------------+--------------------------------------------------+
+|  5  | Bass Cathedral      | 4.92 / 9.0 | - similar mood: euphoric ~ intense (+0.9)        |
+|     | Voltage Saints      |            | - valence close: 0.88 vs target 0.45 (+1.1)      |
+|     | edm | euphoric      |            | - energy close: 0.96 vs target 0.92 (+1.9)       |
+|     |                     |            | - acousticness close: 0.04 vs target 0.08 (+1.0) |
++-----+---------------------+------------+--------------------------------------------------+
 ```
 
 #### Rainy Day
 
 ```
-================================================================
+=================================================================================================
  RAINY DAY: TOP 5 RECOMMENDATIONS
  Profile: genre folk, mood sad, energy 0.3, valence 0.25, acousticness 0.85
-================================================================
-
-#1  Rainy Window Letters - Hollow Pines
-    folk | sad
-    Score: 8.86 / 9.0
-    Why:
-      - mood match: sad (+3.0)
-      - valence close: 0.22 vs target 0.25 (+1.9)
-      - energy close: 0.30 vs target 0.30 (+2.0)
-      - acousticness close: 0.93 vs target 0.85 (+0.9)
-      - genre match: folk (+1.0)
-----------------------------------------------------------------
-
-#2  Moonlit Sonata Redux - Elena Voss
-    classical | melancholic
-    Score: 7.04 / 9.0
-    Why:
-      - similar mood: melancholic ~ sad (+2.4)
-      - valence close: 0.30 vs target 0.25 (+1.9)
-      - energy close: 0.22 vs target 0.30 (+1.8)
-      - acousticness close: 0.95 vs target 0.85 (+0.9)
-----------------------------------------------------------------
-
-#3  Smoke and Neon Blues - Delta Marlowe
-    blues | bittersweet
-    Score: 6.86 / 9.0
-    Why:
-      - similar mood: bittersweet ~ sad (+2.4)
-      - valence close: 0.28 vs target 0.25 (+1.9)
-      - energy close: 0.45 vs target 0.30 (+1.7)
-      - acousticness close: 0.67 vs target 0.85 (+0.8)
-----------------------------------------------------------------
-
-#4  Library Rain - Paper Lanterns
-    lofi | chill
-    Score: 5.09 / 9.0
-    Why:
-      - similar mood: chill ~ sad (+0.9)
-      - valence close: 0.60 vs target 0.25 (+1.3)
-      - energy close: 0.35 vs target 0.30 (+1.9)
-      - acousticness close: 0.86 vs target 0.85 (+1.0)
-----------------------------------------------------------------
-
-#5  Spacewalk Thoughts - Orbit Bloom
-    ambient | chill
-    Score: 4.99 / 9.0
-    Why:
-      - similar mood: chill ~ sad (+0.9)
-      - valence close: 0.65 vs target 0.25 (+1.2)
-      - energy close: 0.28 vs target 0.30 (+2.0)
-      - acousticness close: 0.92 vs target 0.85 (+0.9)
-----------------------------------------------------------------
+=================================================================================================
++-----+-------------------------+------------+--------------------------------------------------+
+|  #  | Song                    |   Score    | Reasons                                          |
++=====+=========================+============+==================================================+
+|  1  | Rainy Window Letters    | 8.86 / 9.0 | - mood match: sad (+3.0)                         |
+|     | Hollow Pines            |            | - valence close: 0.22 vs target 0.25 (+1.9)      |
+|     | folk | sad              |            | - energy close: 0.30 vs target 0.30 (+2.0)       |
+|     |                         |            | - acousticness close: 0.93 vs target 0.85 (+0.9) |
+|     |                         |            | - genre match: folk (+1.0)                       |
++-----+-------------------------+------------+--------------------------------------------------+
+|  2  | Moonlit Sonata Redux    | 7.04 / 9.0 | - similar mood: melancholic ~ sad (+2.4)         |
+|     | Elena Voss              |            | - valence close: 0.30 vs target 0.25 (+1.9)      |
+|     | classical | melancholic |            | - energy close: 0.22 vs target 0.30 (+1.8)       |
+|     |                         |            | - acousticness close: 0.95 vs target 0.85 (+0.9) |
++-----+-------------------------+------------+--------------------------------------------------+
+|  3  | Smoke and Neon Blues    | 6.86 / 9.0 | - similar mood: bittersweet ~ sad (+2.4)         |
+|     | Delta Marlowe           |            | - valence close: 0.28 vs target 0.25 (+1.9)      |
+|     | blues | bittersweet     |            | - energy close: 0.45 vs target 0.30 (+1.7)       |
+|     |                         |            | - acousticness close: 0.67 vs target 0.85 (+0.8) |
++-----+-------------------------+------------+--------------------------------------------------+
+|  4  | Library Rain            | 5.09 / 9.0 | - similar mood: chill ~ sad (+0.9)               |
+|     | Paper Lanterns          |            | - valence close: 0.60 vs target 0.25 (+1.3)      |
+|     | lofi | chill            |            | - energy close: 0.35 vs target 0.30 (+1.9)       |
+|     |                         |            | - acousticness close: 0.86 vs target 0.85 (+1.0) |
++-----+-------------------------+------------+--------------------------------------------------+
+|  5  | Spacewalk Thoughts      | 4.99 / 9.0 | - similar mood: chill ~ sad (+0.9)               |
+|     | Orbit Bloom             |            | - valence close: 0.65 vs target 0.25 (+1.2)      |
+|     | ambient | chill         |            | - energy close: 0.28 vs target 0.30 (+2.0)       |
+|     |                         |            | - acousticness close: 0.92 vs target 0.85 (+0.9) |
++-----+-------------------------+------------+--------------------------------------------------+
 ```
 
 #### Sad Banger (conflicting)
 
 ```
-================================================================
+=================================================================================================
  SAD BANGER (CONFLICTING): TOP 5 RECOMMENDATIONS
  Profile: genre pop, mood sad, energy 0.9, valence 0.2, acousticness 0.1
-================================================================
-
-#1  Rainy Window Letters - Hollow Pines
-    folk | sad
-    Score: 5.93 / 9.0
-    Why:
-      - mood match: sad (+3.0)
-      - valence close: 0.22 vs target 0.20 (+2.0)
-      - energy close: 0.30 vs target 0.90 (+0.8)
-      - acousticness close: 0.93 vs target 0.10 (+0.2)
-----------------------------------------------------------------
-
-#2  Smoke and Neon Blues - Delta Marlowe
-    blues | bittersweet
-    Score: 5.77 / 9.0
-    Why:
-      - similar mood: bittersweet ~ sad (+2.4)
-      - valence close: 0.28 vs target 0.20 (+1.8)
-      - energy close: 0.45 vs target 0.90 (+1.1)
-      - acousticness close: 0.67 vs target 0.10 (+0.4)
-----------------------------------------------------------------
-
-#3  Moonlit Sonata Redux - Elena Voss
-    classical | melancholic
-    Score: 4.99 / 9.0
-    Why:
-      - similar mood: melancholic ~ sad (+2.4)
-      - valence close: 0.30 vs target 0.20 (+1.8)
-      - energy close: 0.22 vs target 0.90 (+0.6)
-      - acousticness close: 0.95 vs target 0.10 (+0.2)
-----------------------------------------------------------------
-
-#4  Gym Hero - Max Pulse
-    pop | intense
-    Score: 4.75 / 9.0
-    Why:
-      - valence close: 0.77 vs target 0.20 (+0.9)
-      - energy close: 0.93 vs target 0.90 (+1.9)
-      - acousticness close: 0.05 vs target 0.10 (+0.9)
-      - genre match: pop (+1.0)
-----------------------------------------------------------------
-
-#5  Ashes in the Static - Iron Verdict
-    metal | angry
-    Score: 4.72 / 9.0
-    Why:
-      - valence close: 0.25 vs target 0.20 (+1.9)
-      - energy close: 0.97 vs target 0.90 (+1.9)
-      - acousticness close: 0.06 vs target 0.10 (+1.0)
-----------------------------------------------------------------
+=================================================================================================
++-----+-------------------------+------------+--------------------------------------------------+
+|  #  | Song                    |   Score    | Reasons                                          |
++=====+=========================+============+==================================================+
+|  1  | Rainy Window Letters    | 5.93 / 9.0 | - mood match: sad (+3.0)                         |
+|     | Hollow Pines            |            | - valence close: 0.22 vs target 0.20 (+2.0)      |
+|     | folk | sad              |            | - energy close: 0.30 vs target 0.90 (+0.8)       |
+|     |                         |            | - acousticness close: 0.93 vs target 0.10 (+0.2) |
++-----+-------------------------+------------+--------------------------------------------------+
+|  2  | Smoke and Neon Blues    | 5.77 / 9.0 | - similar mood: bittersweet ~ sad (+2.4)         |
+|     | Delta Marlowe           |            | - valence close: 0.28 vs target 0.20 (+1.8)      |
+|     | blues | bittersweet     |            | - energy close: 0.45 vs target 0.90 (+1.1)       |
+|     |                         |            | - acousticness close: 0.67 vs target 0.10 (+0.4) |
++-----+-------------------------+------------+--------------------------------------------------+
+|  3  | Moonlit Sonata Redux    | 4.99 / 9.0 | - similar mood: melancholic ~ sad (+2.4)         |
+|     | Elena Voss              |            | - valence close: 0.30 vs target 0.20 (+1.8)      |
+|     | classical | melancholic |            | - energy close: 0.22 vs target 0.90 (+0.6)       |
+|     |                         |            | - acousticness close: 0.95 vs target 0.10 (+0.2) |
++-----+-------------------------+------------+--------------------------------------------------+
+|  4  | Gym Hero                | 4.75 / 9.0 | - valence close: 0.77 vs target 0.20 (+0.9)      |
+|     | Max Pulse               |            | - energy close: 0.93 vs target 0.90 (+1.9)       |
+|     | pop | intense           |            | - acousticness close: 0.05 vs target 0.10 (+0.9) |
+|     |                         |            | - genre match: pop (+1.0)                        |
++-----+-------------------------+------------+--------------------------------------------------+
+|  5  | Ashes in the Static     | 4.72 / 9.0 | - valence close: 0.25 vs target 0.20 (+1.9)      |
+|     | Iron Verdict            |            | - energy close: 0.97 vs target 0.90 (+1.9)       |
+|     | metal | angry           |            | - acousticness close: 0.06 vs target 0.10 (+1.0) |
++-----+-------------------------+------------+--------------------------------------------------+
 ```
 
 #### Genre Trap (lofi but intense)
 
 ```
-================================================================
+=============================================================================================
  GENRE TRAP (LOFI BUT INTENSE): TOP 5 RECOMMENDATIONS
  Profile: genre lofi, mood intense, energy 0.95, valence 0.5, acousticness 0.05
-================================================================
-
-#1  Storm Runner - Voltline
-    rock | intense
-    Score: 7.83 / 9.0
-    Why:
-      - mood match: intense (+3.0)
-      - valence close: 0.48 vs target 0.50 (+2.0)
-      - energy close: 0.91 vs target 0.95 (+1.9)
-      - acousticness close: 0.10 vs target 0.05 (+0.9)
-----------------------------------------------------------------
-
-#2  Gym Hero - Max Pulse
-    pop | intense
-    Score: 7.42 / 9.0
-    Why:
-      - mood match: intense (+3.0)
-      - valence close: 0.77 vs target 0.50 (+1.5)
-      - energy close: 0.93 vs target 0.95 (+2.0)
-      - acousticness close: 0.05 vs target 0.05 (+1.0)
-----------------------------------------------------------------
-
-#3  Ashes in the Static - Iron Verdict
-    metal | angry
-    Score: 6.85 / 9.0
-    Why:
-      - similar mood: angry ~ intense (+2.4)
-      - valence close: 0.25 vs target 0.50 (+1.5)
-      - energy close: 0.97 vs target 0.95 (+2.0)
-      - acousticness close: 0.06 vs target 0.05 (+1.0)
-----------------------------------------------------------------
-
-#4  Concrete Crown - Kid Meridian
-    hip hop | confident
-    Score: 6.75 / 9.0
-    Why:
-      - similar mood: confident ~ intense (+2.4)
-      - valence close: 0.62 vs target 0.50 (+1.8)
-      - energy close: 0.78 vs target 0.95 (+1.7)
-      - acousticness close: 0.12 vs target 0.05 (+0.9)
-----------------------------------------------------------------
-
-#5  Bass Cathedral - Voltage Saints
-    edm | euphoric
-    Score: 5.11 / 9.0
-    Why:
-      - similar mood: euphoric ~ intense (+0.9)
-      - valence close: 0.88 vs target 0.50 (+1.2)
-      - energy close: 0.96 vs target 0.95 (+2.0)
-      - acousticness close: 0.04 vs target 0.05 (+1.0)
-----------------------------------------------------------------
+=============================================================================================
++-----+---------------------+------------+--------------------------------------------------+
+|  #  | Song                |   Score    | Reasons                                          |
++=====+=====================+============+==================================================+
+|  1  | Storm Runner        | 7.83 / 9.0 | - mood match: intense (+3.0)                     |
+|     | Voltline            |            | - valence close: 0.48 vs target 0.50 (+2.0)      |
+|     | rock | intense      |            | - energy close: 0.91 vs target 0.95 (+1.9)       |
+|     |                     |            | - acousticness close: 0.10 vs target 0.05 (+0.9) |
++-----+---------------------+------------+--------------------------------------------------+
+|  2  | Gym Hero            | 7.42 / 9.0 | - mood match: intense (+3.0)                     |
+|     | Max Pulse           |            | - valence close: 0.77 vs target 0.50 (+1.5)      |
+|     | pop | intense       |            | - energy close: 0.93 vs target 0.95 (+2.0)       |
+|     |                     |            | - acousticness close: 0.05 vs target 0.05 (+1.0) |
++-----+---------------------+------------+--------------------------------------------------+
+|  3  | Ashes in the Static | 6.85 / 9.0 | - similar mood: angry ~ intense (+2.4)           |
+|     | Iron Verdict        |            | - valence close: 0.25 vs target 0.50 (+1.5)      |
+|     | metal | angry       |            | - energy close: 0.97 vs target 0.95 (+2.0)       |
+|     |                     |            | - acousticness close: 0.06 vs target 0.05 (+1.0) |
++-----+---------------------+------------+--------------------------------------------------+
+|  4  | Concrete Crown      | 6.75 / 9.0 | - similar mood: confident ~ intense (+2.4)       |
+|     | Kid Meridian        |            | - valence close: 0.62 vs target 0.50 (+1.8)      |
+|     | hip hop | confident |            | - energy close: 0.78 vs target 0.95 (+1.7)       |
+|     |                     |            | - acousticness close: 0.12 vs target 0.05 (+0.9) |
++-----+---------------------+------------+--------------------------------------------------+
+|  5  | Bass Cathedral      | 5.11 / 9.0 | - similar mood: euphoric ~ intense (+0.9)        |
+|     | Voltage Saints      |            | - valence close: 0.88 vs target 0.50 (+1.2)      |
+|     | edm | euphoric      |            | - energy close: 0.96 vs target 0.95 (+2.0)       |
+|     |                     |            | - acousticness close: 0.04 vs target 0.05 (+1.0) |
++-----+---------------------+------------+--------------------------------------------------+
 ```
 
 #### Unknown Mood and Genre
 
 ```
-================================================================
+=============================================================================================
  UNKNOWN MOOD AND GENRE: TOP 5 RECOMMENDATIONS
  Profile: genre k-pop, mood mysterious, energy 0.6, valence 0.6, acousticness 0.5
-================================================================
-
-#1  Dust Road Home - Billy Marrow
-    country | nostalgic
-    Score: 4.54 / 9.0
-    Why:
-      - valence close: 0.66 vs target 0.60 (+1.9)
-      - energy close: 0.55 vs target 0.60 (+1.9)
-      - acousticness close: 0.74 vs target 0.50 (+0.8)
-----------------------------------------------------------------
-
-#2  Velvet Hours - Amara Vale
-    r&b | romantic
-    Score: 4.52 / 9.0
-    Why:
-      - valence close: 0.68 vs target 0.60 (+1.8)
-      - energy close: 0.52 vs target 0.60 (+1.8)
-      - acousticness close: 0.34 vs target 0.50 (+0.8)
-----------------------------------------------------------------
-
-#3  Midnight Coding - LoRoom
-    lofi | chill
-    Score: 4.35 / 9.0
-    Why:
-      - valence close: 0.56 vs target 0.60 (+1.9)
-      - energy close: 0.42 vs target 0.60 (+1.6)
-      - acousticness close: 0.71 vs target 0.50 (+0.8)
-----------------------------------------------------------------
-
-#4  Focus Flow - LoRoom
-    lofi | focused
-    Score: 4.30 / 9.0
-    Why:
-      - valence close: 0.59 vs target 0.60 (+2.0)
-      - energy close: 0.40 vs target 0.60 (+1.6)
-      - acousticness close: 0.78 vs target 0.50 (+0.7)
-----------------------------------------------------------------
-
-#5  Island Breeze - Sun Drifters
-    reggae | uplifting
-    Score: 4.25 / 9.0
-    Why:
-      - valence close: 0.85 vs target 0.60 (+1.5)
-      - energy close: 0.50 vs target 0.60 (+1.8)
-      - acousticness close: 0.45 vs target 0.50 (+0.9)
-----------------------------------------------------------------
+=============================================================================================
++-----+---------------------+------------+--------------------------------------------------+
+|  #  | Song                |   Score    | Reasons                                          |
++=====+=====================+============+==================================================+
+|  1  | Dust Road Home      | 4.54 / 9.0 | - valence close: 0.66 vs target 0.60 (+1.9)      |
+|     | Billy Marrow        |            | - energy close: 0.55 vs target 0.60 (+1.9)       |
+|     | country | nostalgic |            | - acousticness close: 0.74 vs target 0.50 (+0.8) |
++-----+---------------------+------------+--------------------------------------------------+
+|  2  | Velvet Hours        | 4.52 / 9.0 | - valence close: 0.68 vs target 0.60 (+1.8)      |
+|     | Amara Vale          |            | - energy close: 0.52 vs target 0.60 (+1.8)       |
+|     | r&b | romantic      |            | - acousticness close: 0.34 vs target 0.50 (+0.8) |
++-----+---------------------+------------+--------------------------------------------------+
+|  3  | Midnight Coding     | 4.35 / 9.0 | - valence close: 0.56 vs target 0.60 (+1.9)      |
+|     | LoRoom              |            | - energy close: 0.42 vs target 0.60 (+1.6)       |
+|     | lofi | chill        |            | - acousticness close: 0.71 vs target 0.50 (+0.8) |
++-----+---------------------+------------+--------------------------------------------------+
+|  4  | Focus Flow          | 4.30 / 9.0 | - valence close: 0.59 vs target 0.60 (+2.0)      |
+|     | LoRoom              |            | - energy close: 0.40 vs target 0.60 (+1.6)       |
+|     | lofi | focused      |            | - acousticness close: 0.78 vs target 0.50 (+0.7) |
++-----+---------------------+------------+--------------------------------------------------+
+|  5  | Island Breeze       | 4.25 / 9.0 | - valence close: 0.85 vs target 0.60 (+1.5)      |
+|     | Sun Drifters        |            | - energy close: 0.50 vs target 0.60 (+1.8)       |
+|     | reggae | uplifting  |            | - acousticness close: 0.45 vs target 0.50 (+0.9) |
++-----+---------------------+------------+--------------------------------------------------+
 ```
 
 #### Dead Center (no mood/genre)
 
 ```
-================================================================
+==============================================================================================
  DEAD CENTER (NO MOOD/GENRE): TOP 5 RECOMMENDATIONS
  Profile: energy 0.5, valence 0.5, acousticness 0.5
-================================================================
+==============================================================================================
++-----+----------------------+------------+--------------------------------------------------+
+|  #  | Song                 |   Score    | Reasons                                          |
++=====+======================+============+==================================================+
+|  1  | Midnight Coding      | 4.51 / 5.0 | - valence close: 0.56 vs target 0.50 (+1.9)      |
+|     | LoRoom               |            | - energy close: 0.42 vs target 0.50 (+1.8)       |
+|     | lofi | chill         |            | - acousticness close: 0.71 vs target 0.50 (+0.8) |
++-----+----------------------+------------+--------------------------------------------------+
+|  2  | Velvet Hours         | 4.44 / 5.0 | - valence close: 0.68 vs target 0.50 (+1.6)      |
+|     | Amara Vale           |            | - energy close: 0.52 vs target 0.50 (+2.0)       |
+|     | r&b | romantic       |            | - acousticness close: 0.34 vs target 0.50 (+0.8) |
++-----+----------------------+------------+--------------------------------------------------+
+|  3  | Dust Road Home       | 4.34 / 5.0 | - valence close: 0.66 vs target 0.50 (+1.7)      |
+|     | Billy Marrow         |            | - energy close: 0.55 vs target 0.50 (+1.9)       |
+|     | country | nostalgic  |            | - acousticness close: 0.74 vs target 0.50 (+0.8) |
++-----+----------------------+------------+--------------------------------------------------+
+|  4  | Focus Flow           | 4.34 / 5.0 | - valence close: 0.59 vs target 0.50 (+1.8)      |
+|     | LoRoom               |            | - energy close: 0.40 vs target 0.50 (+1.8)       |
+|     | lofi | focused       |            | - acousticness close: 0.78 vs target 0.50 (+0.7) |
++-----+----------------------+------------+--------------------------------------------------+
+|  5  | Smoke and Neon Blues | 4.29 / 5.0 | - valence close: 0.28 vs target 0.50 (+1.6)      |
+|     | Delta Marlowe        |            | - energy close: 0.45 vs target 0.50 (+1.9)       |
+|     | blues | bittersweet  |            | - acousticness close: 0.67 vs target 0.50 (+0.8) |
++-----+----------------------+------------+--------------------------------------------------+
+```
 
-#1  Midnight Coding - LoRoom
-    lofi | chill
-    Score: 4.51 / 5.0
-    Why:
-      - valence close: 0.56 vs target 0.50 (+1.9)
-      - energy close: 0.42 vs target 0.50 (+1.8)
-      - acousticness close: 0.71 vs target 0.50 (+0.8)
-----------------------------------------------------------------
+#### Summary of all profiles
 
-#2  Velvet Hours - Amara Vale
-    r&b | romantic
-    Score: 4.44 / 5.0
-    Why:
-      - valence close: 0.68 vs target 0.50 (+1.6)
-      - energy close: 0.52 vs target 0.50 (+2.0)
-      - acousticness close: 0.34 vs target 0.50 (+0.8)
-----------------------------------------------------------------
-
-#3  Dust Road Home - Billy Marrow
-    country | nostalgic
-    Score: 4.34 / 5.0
-    Why:
-      - valence close: 0.66 vs target 0.50 (+1.7)
-      - energy close: 0.55 vs target 0.50 (+1.9)
-      - acousticness close: 0.74 vs target 0.50 (+0.8)
-----------------------------------------------------------------
-
-#4  Focus Flow - LoRoom
-    lofi | focused
-    Score: 4.34 / 5.0
-    Why:
-      - valence close: 0.59 vs target 0.50 (+1.8)
-      - energy close: 0.40 vs target 0.50 (+1.8)
-      - acousticness close: 0.78 vs target 0.50 (+0.7)
-----------------------------------------------------------------
-
-#5  Smoke and Neon Blues - Delta Marlowe
-    blues | bittersweet
-    Score: 4.29 / 5.0
-    Why:
-      - valence close: 0.28 vs target 0.50 (+1.6)
-      - energy close: 0.45 vs target 0.50 (+1.9)
-      - acousticness close: 0.67 vs target 0.50 (+0.8)
-----------------------------------------------------------------
+```
+=========================================================================================================
+ SUMMARY OF ALL PROFILES
+=========================================================================================================
++-------------------------------+----------------------+------------+----------------------+------------+
+| Profile                       | Top pick             |   Score    | Runner-up            |   Score    |
++===============================+======================+============+======================+============+
+| High-Energy Pop               | Sunrise City         | 8.83 / 9.0 | Rooftop Lights       | 7.60 / 9.0 |
++-------------------------------+----------------------+------------+----------------------+------------+
+| Chill Lofi                    | Library Rain         | 8.84 / 9.0 | Midnight Coding      | 8.79 / 9.0 |
++-------------------------------+----------------------+------------+----------------------+------------+
+| Deep Intense Rock             | Storm Runner         | 8.90 / 9.0 | Gym Hero             | 7.31 / 9.0 |
++-------------------------------+----------------------+------------+----------------------+------------+
+| Rainy Day                     | Rainy Window Letters | 8.86 / 9.0 | Moonlit Sonata Redux | 7.04 / 9.0 |
++-------------------------------+----------------------+------------+----------------------+------------+
+| Sad Banger (conflicting)      | Rainy Window Letters | 5.93 / 9.0 | Smoke and Neon Blues | 5.77 / 9.0 |
++-------------------------------+----------------------+------------+----------------------+------------+
+| Genre Trap (lofi but intense) | Storm Runner         | 7.83 / 9.0 | Gym Hero             | 7.42 / 9.0 |
++-------------------------------+----------------------+------------+----------------------+------------+
+| Unknown Mood and Genre        | Dust Road Home       | 4.54 / 9.0 | Velvet Hours         | 4.52 / 9.0 |
++-------------------------------+----------------------+------------+----------------------+------------+
+| Dead Center (no mood/genre)   | Midnight Coding      | 4.51 / 5.0 | Velvet Hours         | 4.44 / 5.0 |
++-------------------------------+----------------------+------------+----------------------+------------+
 ```
 
 **Screenshot or video** *(optional)*: <!-- Insert a screenshot or demo video link here -->

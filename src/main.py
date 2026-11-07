@@ -9,10 +9,9 @@ You will implement the functions in recommender.py:
 - recommend_songs
 """
 
+from tabulate import tabulate
+
 from src.recommender import load_songs, max_score, recommend_songs
-
-
-WIDTH = 64
 
 
 # Taste profiles. Each is a dict of target values (see score_song for the keys).
@@ -53,34 +52,91 @@ PROFILES = {
 }
 
 
-def print_recommendations(name: str, user_prefs: dict, recommendations: list) -> None:
-    """Print ranked recommendations with the score and one reason per line."""
-    profile = ", ".join(f"{key} {value}" for key, value in user_prefs.items())
+def make_table(rows: list, headers: list, colalign: tuple) -> str:
+    """Build an ASCII grid table. disable_numparse keeps scores like '8.86 / 9.0' as typed."""
+    return tabulate(
+        rows,
+        headers=headers,
+        tablefmt="grid",
+        colalign=colalign,
+        disable_numparse=True,
+    )
 
+
+def print_banner(title_lines: list, width: int) -> None:
+    """Print title lines between two '=' rules of the given width."""
     print()
-    print("=" * WIDTH)
-    print(f" {name.upper()}: TOP {len(recommendations)} RECOMMENDATIONS")
-    print(f" Profile: {profile}")
-    print("=" * WIDTH)
+    print("=" * width)
+    for line in title_lines:
+        print(f" {line}")
+    print("=" * width)
 
+
+def recommendations_table(user_prefs: dict, recommendations: list) -> str:
+    """Table of rank, song, score, and every reason (one per line) for each recommendation."""
+    ceiling = max_score(user_prefs)
+    rows = []
     for rank, (song, score, explanation) in enumerate(recommendations, start=1):
-        print()
-        print(f"#{rank}  {song['title']} - {song['artist']}")
-        print(f"    {song['genre']} | {song['mood']}")
-        print(f"    Score: {score:.2f} / {max_score(user_prefs):.1f}")
-        print("    Why:")
-        for reason in explanation.split("; "):
-            print(f"      - {reason}")
-        print("-" * WIDTH)
+        rows.append([
+            rank,
+            f"{song['title']}\n{song['artist']}\n{song['genre']} | {song['mood']}",
+            f"{score:.2f} / {ceiling:.1f}",
+            "\n".join(f"- {reason}" for reason in explanation.split("; ")),
+        ])
+    return make_table(
+        rows,
+        headers=["#", "Song", "Score", "Reasons"],
+        colalign=("center", "left", "center", "left"),
+    )
+
+
+def print_recommendations(name: str, user_prefs: dict, recommendations: list) -> None:
+    """Print one profile's top picks as a table, including the reasons for each score."""
+    profile = ", ".join(f"{key} {value}" for key, value in user_prefs.items())
+    table = recommendations_table(user_prefs, recommendations)
+    width = max(len(line) for line in table.splitlines())
+
+    print_banner(
+        [f"{name.upper()}: TOP {len(recommendations)} RECOMMENDATIONS", f"Profile: {profile}"],
+        width,
+    )
+    print(table)
+
+
+def print_summary(results: list) -> None:
+    """Print one row per profile with its top pick and runner-up, to compare profiles at a glance."""
+    rows = []
+    for name, user_prefs, recommendations in results:
+        ceiling = max_score(user_prefs)
+        row = [name]
+        for index in (0, 1):
+            if index < len(recommendations):
+                song, score, _ = recommendations[index]
+                row += [song["title"], f"{score:.2f} / {ceiling:.1f}"]
+            else:
+                row += ["-", "-"]
+        rows.append(row)
+
+    table = make_table(
+        rows,
+        headers=["Profile", "Top pick", "Score", "Runner-up", "Score"],
+        colalign=("left", "left", "center", "left", "center"),
+    )
+    print_banner(["SUMMARY OF ALL PROFILES"], max(len(line) for line in table.splitlines()))
+    print(table)
 
 
 def main() -> None:
     songs = load_songs("data/songs.csv")
     print(f"Loaded songs: {len(songs)}")
 
+    results = []
     for name, user_prefs in PROFILES.items():
         recommendations = recommend_songs(user_prefs, songs, k=5)
         print_recommendations(name, user_prefs, recommendations)
+        results.append((name, user_prefs, recommendations))
+
+    print_summary(results)
 
 
 if __name__ == "__main__":
