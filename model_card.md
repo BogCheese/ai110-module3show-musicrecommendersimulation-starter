@@ -1,109 +1,120 @@
 # 🎧 Model Card: Music Recommender Simulation
 
-## 1. Model Name  
+## 1. Model Name
 
-Give your model a short, descriptive name.  
-Example: **VibeFinder 1.0**  
+**MoodMatch 1.0**
 
----
-
-## 2. Intended Use  
-
-Describe what your recommender is designed to do and who it is for. 
-
-Prompts:  
-
-- What kind of recommendations does it generate  
-- What assumptions does it make about the user  
-- Is this for real users or classroom exploration  
+A small recommender that picks songs by mood first.
 
 ---
 
-## 3. How the Model Works  
+## 2. Goal / Task and Intended Use
 
-Explain your scoring approach in simple language.  
+**Goal.** MoodMatch suggests songs a person might like next. It reads one taste profile. It scores every song in a small catalog. Then it shows the top 5, with reasons.
 
-Prompts:  
+**What it assumes about the user.**
 
-- What features of each song are used (genre, energy, mood, etc.)  
-- What user preferences are considered  
-- How does the model turn those into a score  
-- What changes did you make from the starter logic  
+- Each user has one fixed taste.
+- The user can describe that taste with a mood, a genre, and a few numbers.
+- Songs that sound close to the profile will feel right.
 
-Avoid code here. Pretend you are explaining the idea to a friend who does not program.
+**Intended use.**
 
-**Algorithmic approach, in plain language**
+- Classroom learning about how recommenders work.
+- Trying ideas, like changing weights, on a tiny catalog.
+- Showing why each song was picked.
 
-Think of the recommender as a judge who gives every song in the catalog a grade out of 9, then hands you the five songs with the best grades.
+**Not intended for.**
 
-To grade a song, the judge compares it with a "taste profile": the mood you want, how upbeat or gloomy you want it to feel, how energetic, how acoustic, and your favorite genre. Each of those is worth a different number of points:
-
-- **Mood: up to 3 points.** This counts most because mood is how I naturally describe a vibe. An exact match earns all 3 points. A similar mood still earns most of them, so "chill" and "relaxed" count as close cousins, while a mood from a neighboring group earns a little and an unrelated one earns nothing.
-- **Valence (how happy or gloomy the song sounds): up to 2 points.**
-- **Energy (calm to intense): up to 2 points.**
-- **Acousticness (soft and organic vs. electronic): up to 1 point.**
-- **Genre: up to 1 point,** only for an exact match. It counts least because the catalog is small and most genres appear only once.
-
-For the three number-based features, the judge rewards being close to what you asked for, not being higher or lower. If you want calm music, a song with energy 0.30 earns nearly full points and a song with energy 0.93 earns very few. Added together, the points make the song's grade.
-
-After every song has a grade, the judge puts them in order from highest to lowest. If two songs tie, the one with the closer mood wins, and after that the title decides alphabetically. The top five are shown along with the reasons behind each grade, such as "mood match: sad (+3.0)", so you can see why a song was picked.
-
-**What changed from the starter logic:** the starter suggested a simple recipe of +2.0 for a genre match, +1.0 for a mood match, and a similarity bonus for energy. I made mood count for more than genre, added valence and acousticness as extra features, and let similar moods earn partial credit. Everything is a soft score with no hard filters, so a song that misses on one feature can still rank well overall.
+- Real music apps or real listeners. The catalog is far too small.
+- Guessing how a person feels, or judging their mental health, from the mood they pick.
+- Deciding which artists get exposure or money.
+- People who want very different music at different times, like sad songs to code and loud songs at the gym.
+- Treating a score as proof that a song is good.
 
 ---
 
-## 4. Data  
+## 3. Algorithm Summary (How the Model Works)
 
-Describe the dataset the model uses.  
+Think of the system as a judge. The judge gives every song a grade. Then it picks the best five.
 
-Prompts:  
+The judge compares each song to your taste profile. Each feature is worth some points:
 
-- How many songs are in the catalog  
-- What genres or moods are represented  
-- Did you add or remove data  
-- Are there parts of musical taste missing in the dataset  
+- **Mood: up to 3 points.** An exact match gets all 3. A similar mood, like chill and relaxed, gets most of them. A neighboring mood gets a little. An unrelated mood gets none.
+- **Valence: up to 2 points.** This is how happy or gloomy a song sounds.
+- **Energy: up to 2 points.** This is calm to intense.
+- **Acousticness: up to 1 point.** This is soft and organic vs. electronic.
+- **Genre: up to 1 point.** Only an exact match counts.
+
+For the number features, closer is better. Higher or lower does not matter. Say you want calm music. A song with energy 0.30 earns almost full points. A song with energy 0.93 earns very few.
+
+The points add up to the song's grade. The most a song can get is 9. It is less if a profile skips mood or genre.
+
+Then the songs are sorted from best to worst. If two songs tie, the closer mood wins. After that, the title decides. The top 5 are shown with their reasons, like "mood match: sad (+3.0)".
+
+**Why mood counts most.** Mood is how I describe a vibe. Genre is a weak signal here, because most genres have only one song.
+
+**What I changed from the starter.** The starter suggested +2 for genre, +1 for mood, and an energy bonus. I made mood count more than genre. I added valence and acousticness. I let similar moods earn partial credit. Everything is a soft score. There are no hard filters.
 
 ---
 
-## 5. Strengths  
+## 4. Data Used
 
-Where does your system seem to work well  
+- The catalog has **20 songs**. The starter had 10. I added 10 more.
+- Each song has a title, artist, genre, mood, energy, tempo, valence, danceability, and acousticness.
+- The numbers run from 0 to 1. Tempo is in beats per minute.
+- There are 17 genres and 16 moods.
+- I wrote the values for my 10 songs by hand. They are plausible, but they are not measured from real audio.
+- The scorer uses mood, valence, energy, acousticness, and genre. It loads tempo and danceability but does not score them.
 
-Prompts:  
+**Limits of the data.**
 
-- User types for which it gives reasonable results  
-- Any patterns you think your scoring captures correctly  
-- Cases where the recommendations matched your intuition  
+- It is tiny. 15 of the 17 genres have only one song.
+- Lofi is the most common genre, with 3 songs.
+- Only 3 songs have middle energy. 8 are calm and 9 are loud.
+- Energy and acousticness move together. Loud songs are electronic. Calm songs are acoustic.
+- There is no lyrics, language, instrumental, or popularity data.
 
 ---
 
-## 6. Limitations and Bias 
+## 5. Strengths
 
-Where the system struggles or behaves unfairly. 
+- Clear profiles get sensible results. Pop gets Sunrise City. Lofi gets Library Rain. Rock gets Storm Runner.
+- Opposite tastes get opposite lists. Rock and Rainy Day share no songs.
+- Every pick comes with reasons. It is easy to see why a song ranked where it did.
+- Similar moods count. Chill and relaxed songs still score well for each other.
+- It is steady. When I doubled energy and halved genre, 5 of 8 profiles kept the same order.
+- Genre cannot trick it. Genre Trap asked for lofi but wanted loud music. No lofi song appeared.
 
-Prompts:  
+---
 
-- Features it does not consider  
-- Genres or moods that are underrepresented  
-- Cases where the system overfits to one preference  
-- Ways the scoring might unintentionally favor some users  
+## 6. Observed Behavior / Biases (Limitations)
+
+**Main weakness.**
 
 One weakness I found is that the mood label can outweigh everything else when a profile has conflicting preferences. In my "Sad Banger" test (mood sad, energy 0.9, acousticness 0.1), the system ranked Rainy Window Letters first with 5.93 points, even though it is a quiet acoustic folk song with energy 0.30. It won almost entirely on its exact mood match (3.0 of 9 points), while Ashes in the Static, a loud, dark, non-acoustic metal song that fits the numeric targets far better, scored only 4.72 because its mood is "angry". Doubling the energy weight did not fix this, since the top result was still a medium-energy song (energy 0.45), so the problem is how much the mood label counts, not any single feature. The catalog also has no song that is both sad and high-energy, so listeners whose tastes combine moods and energy levels in unusual ways get recommendations that match only half of what they asked for.
 
+**Other patterns I saw.**
+
+- Energy and acousticness move together in this catalog (correlation of -0.96). No song is loud and acoustic. No song is calm and electronic. The score counts both, so unusual tastes get penalized twice.
+- "Romantic" and "moody" belong to no mood family. They only earn mood points from an exact match. A romantic listener gets one great song (8.46). The next best is about 4.6.
+- Few songs have middle energy. Profiles that asked for the middle got flat, noisy lists. The top 5 scores were less than 0.3 points apart.
+- Gym Hero shows up in 4 of the 8 top-5 lists. A loud, fairly upbeat song sits close to many tastes.
+- The system never says "nothing here fits". It always returns five songs.
+
 ---
 
-## 7. Evaluation  
+## 7. Evaluation Process
 
-How you checked whether the recommender behaved as expected. 
+**Short version.**
 
-Prompts:  
+- I tested 8 taste profiles: 4 everyday tastes and 4 tricky ones.
+- I read each top 5 list and checked if it matched the vibe.
+- I ran one experiment: energy doubled, genre halved. Then I changed it back.
+- I compared profiles in pairs. I also explained why Gym Hero keeps showing up.
+- The only automated tests are the two starter tests. I judged the scoring by reading the results, not with a metric.
 
-- Which user profiles you tested  
-- What you looked for in the recommendations  
-- What surprised you  
-- Any simple tests or comparisons you ran  
-
-No need for numeric metrics unless you created some.
+**Details**
 
 **Profiles I tested**
 
@@ -141,25 +152,27 @@ The same thing happens in four of my eight profiles, because a loud song that so
 
 ---
 
-## 8. Future Work  
+## 8. Ideas for Improvement
 
-Ideas for how you would improve the model next.  
-
-Prompts:  
-
-- Additional features or preferences  
-- Better ways to explain recommendations  
-- Improving diversity among the top results  
-- Handling more complex user tastes  
+1. **Make mood count less.** Try 2 points instead of 3. Or cap how much a mood label can win. Then re-run Sad Banger and see if the loud, dark songs rise.
+2. **Add better data.** Add more songs, with more per genre. Add loud acoustic songs and calm electronic songs. Add an instrumental column, since I sometimes want music without lyrics.
+3. **Handle more than one taste.** Let a user have contexts, like "coding" and "gym". Also warn when no song fits well, and keep one song like Gym Hero from crowding the lists.
 
 ---
 
-## 9. Personal Reflection  
+## 9. Personal Reflection
 
-A few sentences about your experience.  
+**Biggest learning moment.** A recommender is a set of opinions written as math. I picked every weight myself. Mood got 3 points and genre got 1. That sounded fine until I tried "Sad Banger". A quiet folk song beat a loud metal song because of one mood label. Doubling the energy weight did not fix it. That showed me the weights decide who gets good results.
 
-Prompts:  
+**How AI helped, and when I double-checked it.** AI helped me plan the scoring, write the code, run the profiles, and spot patterns, like energy and acousticness moving together. But I could not trust it blindly. Here is what I had to check:
 
-- What you learned about recommender systems  
-- Something unexpected or interesting you discovered  
-- How this changed the way you think about music recommendation apps  
+- The starter `main.py` had an import that crashed with `python -m src.main`. It had to be fixed.
+- One score looked fine at first. Dead Center showed 4.51 out of 9, which reads like 50%. The real maximum for that profile was 5, so it was really a 90% match.
+- A claim that two profiles had "almost the same" lists was wrong. The lists were identical.
+- The mood groups, like putting "nostalgic" with "calm", were judgment calls. I made those calls, not the AI.
+
+I learned to run the code and compare it to the claim before believing a summary.
+
+**What surprised me.** Simple math can feel like taste. The system does not learn anything. It only adds up points for how close each song is. But the Rainy Day list felt right. The reasons, like "mood match: sad (+3.0)", made it feel smart, even though the system has no idea what sad music feels like. Gym Hero showed me the limit. The system cannot tell "cheerful" from "pumped up".
+
+**What I would try next.** I want a real screen instead of the terminal. The terminal output is messy to read. I would like a clean page that updates as I change things. My idea is a simple app with sliders for energy, valence, and acousticness, and dropdowns for mood and genre. The top 5 songs would update live, with the reasons shown next to each one. The project already lists Streamlit in `requirements.txt`, so that is a natural place to start. I would also add a way to switch between my saved profiles, like Rainy Day and Chill Lofi, and compare them side by side.
