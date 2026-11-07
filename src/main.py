@@ -9,25 +9,50 @@ You will implement the functions in recommender.py:
 - recommend_songs
 """
 
-from recommender import load_songs, recommend_songs
+from src.recommender import load_songs, recommend_songs
+
+
+MAX_SCORE = 9.0  # mood 3 + valence 2 + energy 2 + acousticness 1 + genre 1
+WIDTH = 64
+
+
+def print_recommendations(user_prefs: dict, recommendations: list) -> None:
+    """Print ranked recommendations with the score and one reason per line."""
+    profile = ", ".join(f"{key} {value}" for key, value in user_prefs.items())
+
+    print()
+    print("=" * WIDTH)
+    print(f" TOP {len(recommendations)} RECOMMENDATIONS")
+    print(f" Profile: {profile}")
+    print("=" * WIDTH)
+
+    for rank, (song, score, explanation) in enumerate(recommendations, start=1):
+        print()
+        print(f"#{rank}  {song['title']} - {song['artist']}")
+        print(f"    {song['genre']} | {song['mood']}")
+        print(f"    Score: {score:.2f} / {MAX_SCORE:.1f}")
+        print("    Why:")
+        for reason in explanation.split("; "):
+            print(f"      - {reason}")
+        print("-" * WIDTH)
 
 
 def main() -> None:
-    songs = load_songs("data/songs.csv") 
+    songs = load_songs("data/songs.csv")
+    print(f"Loaded songs: {len(songs)}")
 
-    # Starter example profile
-    user_prefs = {"genre": "pop", "mood": "happy", "energy": 0.8}
+    # "Rainy Day" taste profile: calm, sad, acoustic
+    user_prefs = {
+        "genre": "folk",
+        "mood": "sad",
+        "energy": 0.30,
+        "valence": 0.25,
+        "acousticness": 0.85,
+    }
 
     recommendations = recommend_songs(user_prefs, songs, k=5)
 
-    print("\nTop recommendations:\n")
-    for rec in recommendations:
-        # You decide the structure of each returned item.
-        # A common pattern is: (song, score, explanation)
-        song, score, explanation = rec
-        print(f"{song['title']} - Score: {score:.2f}")
-        print(f"Because: {explanation}")
-        print()
+    print_recommendations(user_prefs, recommendations)
 
 
 if __name__ == "__main__":

@@ -57,7 +57,7 @@ User taste profile  -->  for each song in data/songs.csv:    -->  sort by score 
 | Acousticness | 1.0 | `1 - abs(song_acousticness - target_acousticness)` |
 | Genre | 1.0 | 1.0 for an exact match, otherwise 0 |
 
-`score = sum(weight x component) / 9.0`
+`score = sum(weight x component)`, in raw points with a maximum of 9.0. Each song's reasons list shows the points that add up to its score.
 
 Numeric features reward *closeness* to the target, not higher or lower values. Everything is a soft score with no hard filters.
 
@@ -114,15 +114,66 @@ You can add more tests in `tests/test_recommender.py`.
 
 ## Sample Recommendation Output
 
-Paste a sample of your recommender's output here as a text block so a reader can see what it produces:
+Output for the "Rainy Day" profile (sad, calm, acoustic), produced by `python -m src.main`:
 
 ```
-# e.g.:
-# User profile: genre=indie, mood=chill, energy=low
-# Recommendations:
-#   1. ...
-#   2. ...
-#   3. ...
+Loaded songs: 20
+
+================================================================
+ TOP 5 RECOMMENDATIONS
+ Profile: genre folk, mood sad, energy 0.3, valence 0.25, acousticness 0.85
+================================================================
+
+#1  Rainy Window Letters - Hollow Pines
+    folk | sad
+    Score: 8.86 / 9.0
+    Why:
+      - mood match: sad (+3.0)
+      - valence close: 0.22 vs target 0.25 (+1.9)
+      - energy close: 0.30 vs target 0.30 (+2.0)
+      - acousticness close: 0.93 vs target 0.85 (+0.9)
+      - genre match: folk (+1.0)
+----------------------------------------------------------------
+
+#2  Moonlit Sonata Redux - Elena Voss
+    classical | melancholic
+    Score: 7.04 / 9.0
+    Why:
+      - similar mood: melancholic ~ sad (+2.4)
+      - valence close: 0.30 vs target 0.25 (+1.9)
+      - energy close: 0.22 vs target 0.30 (+1.8)
+      - acousticness close: 0.95 vs target 0.85 (+0.9)
+----------------------------------------------------------------
+
+#3  Smoke and Neon Blues - Delta Marlowe
+    blues | bittersweet
+    Score: 6.86 / 9.0
+    Why:
+      - similar mood: bittersweet ~ sad (+2.4)
+      - valence close: 0.28 vs target 0.25 (+1.9)
+      - energy close: 0.45 vs target 0.30 (+1.7)
+      - acousticness close: 0.67 vs target 0.85 (+0.8)
+----------------------------------------------------------------
+
+#4  Library Rain - Paper Lanterns
+    lofi | chill
+    Score: 5.09 / 9.0
+    Why:
+      - similar mood: chill ~ sad (+0.9)
+      - valence close: 0.60 vs target 0.25 (+1.3)
+      - energy close: 0.35 vs target 0.30 (+1.9)
+      - acousticness close: 0.86 vs target 0.85 (+1.0)
+----------------------------------------------------------------
+
+#5  Spacewalk Thoughts - Orbit Bloom
+    ambient | chill
+    Score: 4.99 / 9.0
+    Why:
+      - similar mood: chill ~ sad (+0.9)
+      - valence close: 0.65 vs target 0.25 (+1.2)
+      - energy close: 0.28 vs target 0.30 (+2.0)
+      - acousticness close: 0.92 vs target 0.85 (+0.9)
+----------------------------------------------------------------
 ```
 
 **Screenshot or video** *(optional)*: <!-- Insert a screenshot or demo video link here -->
