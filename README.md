@@ -11,13 +11,25 @@ Your goal is to:
 - Evaluate what your system gets right and wrong
 - Reflect on how this mirrors real world AI recommenders
 
-Replace this paragraph with your own summary of what your version does.
+**MoodMatch 1.0** is a small, command-line music recommender. It loads a 20-song catalog from `data/songs.csv` and compares every song to a taste profile (mood, valence, energy, acousticness, and genre). It prints the top 5 as a table, with the reasons behind each score. It is content-based only: it uses song attributes and one fixed taste profile, and it has no data about other users. I tested it on 8 profiles, including 4 adversarial ones, and wrote up what I found in the [model card](model_card.md).
 
 ---
 
 ## How The System Works
 
-Real-world recommenders like Spotify and YouTube combine two kinds of signals: what other people with similar behavior enjoyed (collaborative filtering), and what the songs themselves sound like (content-based filtering). They turn those signals into a score for every candidate song, then rank the scores to decide what to show. My version is a simplified, purely content-based recommender: it has no data about other users, so it works only from song attributes and one fixed user taste profile. Each song gets a score from 0 to 1 that rewards *closeness* to the user's preferences instead of simply higher or lower values. I prioritize **mood** most heavily, since that is how I naturally describe a vibe. Next come **valence and energy**, with **acousticness** and **genre** as smaller tie-breakers. Mood uses partial credit so that similar moods such as chill and relaxed still count as a match. Everything is a soft score with no hard filters, so a song that misses on one feature can still rank well overall. After scoring every song, the system sorts by score and returns the top results.
+Real-world recommenders like Spotify and YouTube work in three steps:
+
+1. **Input data.** They collect user behavior, such as plays, skips, likes, saves, playlists, and listening or watch history. They also collect song features, such as genre, mood, tempo, energy, and lyrics or audio analysis.
+2. **User preferences.** From that data, they build a picture of each user's taste. *Collaborative filtering* learns it from people with similar behavior ("listeners like you also played..."). *Content-based filtering* learns it from the features of songs you already liked.
+3. **Ranking and selection.** They give every candidate song a score for how well it fits that taste. Then they sort the scores and show only the top few. Large systems also add rules for variety and freshness.
+
+My version is a simplified, purely content-based recommender, and it follows the same three steps:
+
+- **Input data:** the song table in `data/songs.csv` (genre, mood, energy, valence, acousticness, and more).
+- **User preferences:** one fixed taste profile with a favorite mood and genre, plus target values for energy, valence, and acousticness. There is no listening history.
+- **Ranking and selection:** every song gets a score in points, up to 9.0, that rewards *closeness* to the profile instead of simply higher or lower values. The songs are sorted by score and the top 5 are shown.
+
+I prioritize **mood** most heavily, since that is how I naturally describe a vibe. Next come **valence and energy**, with **acousticness** and **genre** as smaller tie-breakers. Mood uses partial credit so that similar moods such as chill and relaxed still count as a match. Everything is a soft score with no hard filters, so a song that misses on one feature can still rank well overall.
 
 Some prompts to answer:
 
@@ -47,7 +59,7 @@ User taste profile  -->  for each song in data/songs.csv:    -->  sort by score 
 
 ### Algorithm Recipe
 
-**Scoring Rule** (one song vs. the profile, result from 0 to 1):
+**Scoring Rule** (one song vs. the profile, result in points, up to 9.0):
 
 | Component | Weight | How it is computed |
 |---|---|---|
@@ -441,25 +453,37 @@ Output of `python -m src.main`, which runs every profile in `PROFILES` (`Loaded 
 
 ## Experiments You Tried
 
-Use this section to document the experiments you ran. For example:
+### Experiment 1: change the weights (energy x2, genre x0.5)
 
-- What happened when you changed the weight on genre from 2.0 to 0.5
-- What happened when you added tempo or valence to the score
-- How did your system behave for different types of users
+I doubled the energy weight (2.0 to 4.0) and halved the genre weight (1.0 to 0.5), then re-ran all 8 profiles. I checked that every score stayed between 0 and the profile's maximum, and that a perfect match scored the new maximum of 10.5.
+
+- **5 of 8 profiles kept the exact same order.** Scores went up only because more points were available.
+- **Sad Banger changed.** Rainy Window Letters fell from #1 to #2. Smoke and Neon Blues took #1, and Ashes in the Static rose from #5 to #3.
+- **Unknown Mood and Genre and Dead Center shuffled** among near-ties, which were already close to noise.
+- **Verdict: different, not clearly more accurate.** The #1 song for Sad Banger was still a medium-energy song, and its top 5 scores squeezed into a 0.68-point range. I changed the weights back.
+
+### Experiment 2: different types of users
+
+I ran 8 profiles: 4 everyday tastes (High-Energy Pop, Chill Lofi, Deep Intense Rock, Rainy Day) and 4 adversarial ones (Sad Banger, Genre Trap, Unknown Mood and Genre, Dead Center). The full output is in "Sample Recommendation Output" above, and the pair-by-pair comparisons are in the [model card](model_card.md). Opposite tastes got opposite lists, and the Genre Trap profile could not pull lofi songs into a loud, intense list.
+
+### Smaller changes
+
+- I moved "nostalgic" from the sad-like mood family to the calm family. Dust Road Home dropped out of the Rainy Day top 5, because sharing a family with "sad" gave it too much credit.
+- I show each score out of that profile's own maximum, so Dead Center reads 4.51 / 5.0 instead of a misleading 4.51 / 9.0.
 
 ---
 
 ## Limitations and Risks
 
-Summarize some limitations of your recommender.
+- **Tiny catalog.** It has only 20 songs, and 15 of the 17 genres appear once.
+- **The mood label can outweigh everything else.** In the Sad Banger test, a quiet folk song beat a loud metal song because of one mood match.
+- **Energy and acousticness move together** in this data (correlation of -0.96), so unusual tastes, like loud acoustic music, get penalized twice.
+- **Some moods have no family.** "Romantic" and "moody" earn mood points only from an exact match.
+- **It does not understand lyrics, language, or whether a song is instrumental.**
+- **One fixed taste per user.** It cannot handle "sad songs to code, loud songs at the gym".
+- **It never says "nothing fits".** It always returns five songs, even when every score is low.
 
-Examples:
-
-- It only works on a tiny catalog
-- It does not understand lyrics or language
-- It might over favor one genre or mood
-
-You will go deeper on this in your model card.
+The model card goes deeper on these: [Model Card](model_card.md).
 
 ---
 
@@ -469,10 +493,9 @@ Read and complete `model_card.md`:
 
 [**Model Card**](model_card.md)
 
-Write 1 to 2 paragraphs here about what you learned:
+A recommender turns data into predictions by comparing. Each song is a row of labels and numbers. The user is another row of target values. The score says how close the two rows are, and sorting the scores gives the list. My version does not learn anything, but its lists still felt like taste, and the reasons next to each score made it easy to see why a song was picked.
 
-- about how recommenders turn data into predictions
-- about where bias or unfairness could show up in systems like this
+Bias can show up in three places. The first is the data: with 20 songs, a listener whose taste has no good match still gets five songs with no warning. The second is the weights, which are my opinions. I decided mood counts for 3 points, and the Sad Banger test showed that one mood label can beat a better numeric fit. The third is the assumptions: one fixed taste per person, and mood groups I drew by hand. A real app would repeat these problems on millions of users, so the people with unusual tastes would be served worst.
 
 
 
