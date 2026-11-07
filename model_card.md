@@ -88,6 +88,8 @@ Prompts:
 - Cases where the system overfits to one preference  
 - Ways the scoring might unintentionally favor some users  
 
+One weakness I found is that the mood label can outweigh everything else when a profile has conflicting preferences. In my "Sad Banger" test (mood sad, energy 0.9, acousticness 0.1), the system ranked Rainy Window Letters first with 5.93 points, even though it is a quiet acoustic folk song with energy 0.30. It won almost entirely on its exact mood match (3.0 of 9 points), while Ashes in the Static, a loud, dark, non-acoustic metal song that fits the numeric targets far better, scored only 4.72 because its mood is "angry". Doubling the energy weight did not fix this, since the top result was still a medium-energy song (energy 0.45), so the problem is how much the mood label counts, not any single feature. The catalog also has no song that is both sad and high-energy, so listeners whose tastes combine moods and energy levels in unusual ways get recommendations that match only half of what they asked for.
+
 ---
 
 ## 7. Evaluation  
@@ -102,6 +104,40 @@ Prompts:
 - Any simple tests or comparisons you ran  
 
 No need for numeric metrics unless you created some.
+
+**Profiles I tested**
+
+I ran eight taste profiles through the recommender and read the top 5 for each, checking whether the songs matched how I would describe that vibe.
+
+- **Four everyday tastes:** High-Energy Pop, Chill Lofi, Deep Intense Rock, and Rainy Day (sad, calm, acoustic).
+- **Four "try to trick it" profiles:** Sad Banger (sad mood but very high energy), Genre Trap (loves lofi, but wants loud intense music), Unknown Mood and Genre (asks for a mood and genre that no song has), and Dead Center (every number set to the middle, no mood or genre).
+
+I also ran one experiment: doubling the importance of energy and halving genre. Five of the eight profiles kept exactly the same order, so the system is fairly steady when a profile is clear. Only the conflicting and vague profiles moved. I changed the weights back afterward.
+
+**What surprised me**
+
+- **Genre Trap did not get tricked.** The profile says "lofi", but no lofi song appears in its top 5. Genre is only worth 1 point out of 9, so loud songs won because everything else about the profile asked for loud songs.
+- **Sad Banger gave a quiet folk song as its first pick.** The person asked for high energy, but the mood label "sad" was worth so many points that a calm acoustic song beat a loud, dark metal song.
+- **The vague profiles were basically a coin flip.** For Unknown Mood and Genre, the top 5 scores were only 0.29 points apart. When a profile has no strong preferences, the system has no real reason to prefer one song over another, and it does not tell the user that.
+- **Some first places were nearly ties.** For Chill Lofi, Library Rain beat Midnight Coding by 0.05 points, which is not a meaningful difference.
+
+**Comparing pairs of profiles**
+
+I did not compare all 28 possible pairs. These pairs cover every profile at least once.
+
+- **High-Energy Pop vs. Chill Lofi:** The pop list is loud and bright (Sunrise City, Rooftop Lights, Cumbia Sunset), and the lofi list is quiet and soft (Library Rain, Midnight Coding, Focus Flow). Not one song appears in both lists. This makes sense because the two profiles sit at opposite ends of energy and acousticness, so the scoring pushes them to opposite ends of the catalog.
+- **Chill Lofi vs. Rainy Day:** Both want calm, acoustic music, so they share songs such as Library Rain and Spacewalk Thoughts. The difference is mood: Rainy Day puts the gloomy songs first (Rainy Window Letters, Moonlit Sonata Redux, Smoke and Neon Blues), and Chill Lofi puts the relaxed ones first. This is the right result, since the main difference between these two listeners is how sad they want to feel.
+- **High-Energy Pop vs. Deep Intense Rock:** Both want loud songs, so Gym Hero and Bass Cathedral show up in both. What separates them is mood and valence. Pop leads with happy songs, and Rock leads with Storm Runner and the darker, angrier songs. That fits: they want the same loudness but a different feeling.
+- **Deep Intense Rock vs. Genre Trap:** These two get the exact same five songs in the same order (Storm Runner, Gym Hero, Ashes in the Static, Concrete Crown, Bass Cathedral), though the scores differ a little. The only real difference is that Genre Trap says "lofi" instead of "rock", and that changed no rankings. This shows that a genre match is a small bonus here, not a deciding factor, which is what I intended.
+- **Rainy Day vs. Sad Banger:** Both ask for a sad mood, but Sad Banger also asks for loud music. The sad songs still rank near the top for both, but Sad Banger pulls in loud songs lower down (Gym Hero, Ashes in the Static) that Rainy Day never shows. The scores for Sad Banger are also much lower (5.93 at the top vs. 8.86), which correctly signals that no song fits the whole request.
+- **Deep Intense Rock vs. Rainy Day:** These are opposites. Rock gets loud songs with low acousticness, and Rainy Day gets quiet, acoustic ones, with no overlap in their top picks. This is the clearest sign that the energy and acousticness settings work.
+- **Unknown Mood and Genre vs. Dead Center:** Both lists are made of middle-of-the-road songs (Dust Road Home, Velvet Hours, Midnight Coding), with almost the same songs in a slightly different order. This makes sense, because with no mood or genre match available, only the middle-range numbers can decide, and both profiles ask for the middle. It also shows the weakness: when nothing stands out, the order is close to random.
+
+**Why does "Gym Hero" keep showing up for people who just want Happy Pop?**
+
+The system matches songs against a checklist, and Gym Hero ticks almost every box for a Happy Pop fan. It is a pop song. It is loud, upbeat, and bright, which is close to the energy and positivity the profile asked for. The only box it misses is the mood label: Gym Hero is tagged "intense", not "happy". But the system treats "intense" as a close neighbor of "happy", since both are high-energy moods, so it still gives partial credit. That is enough to put it in 5th place for Happy Pop, with 6.58 out of 9. It never wins, because the truly happy songs score higher.
+
+The same thing happens in four of my eight profiles, because a loud song that sounds fairly positive is close to a lot of different tastes, and the catalog only has 20 songs. A real listener would say that workout music and happy music feel different, even if both are loud. The system cannot tell the difference between "cheerful" and "pumped up" beyond that one mood label, which is a real limit of this simple design.
 
 ---
 

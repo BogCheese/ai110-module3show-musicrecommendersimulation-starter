@@ -81,6 +81,11 @@ NEIGHBOR_FAMILIES = {
 }
 
 
+def max_score(user_prefs: Dict) -> float:
+    """Return the highest score possible for these prefs (only keys present can earn points)."""
+    return sum(weight for key, weight in WEIGHTS.items() if key in user_prefs)
+
+
 def mood_credit(target: str, song_mood: str) -> float:
     """Return mood credit from 0 to 1: exact 1.0, same family 0.8, neighbor family 0.3."""
     if target == song_mood:
